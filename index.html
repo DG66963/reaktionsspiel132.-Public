@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Reaktionsspiel</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: white;
+      flex-direction: column;
+    }
+
+    #box {
+      width: 200px;
+      height: 200px;
+      background: red;
+      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      transition: background 0.3s;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+  <div id="message">Klicke, wenn das Feld GRÜN wird!</div>
+
+  <script>
+    const box = document.getElementById("box");
+    const message = document.getElementById("message");
+
+    let startTime, timeout;
+
+    function startGame() {
+      box.style.background = "red";
+      message.textContent = "Warte auf GRÜN...";
+      timeout = setTimeout(() => {
+        box.style.background = "green";
+        startTime = Date.now();
+      }, Math.random() * 3000 + 2000); // 2–5 Sekunden
+    }
+
+    box.addEventListener("click", () => {
+      if (box.style.background === "green") {
+        let reactionTime = Date.now() - startTime;
+        message.textContent = `Reaktionszeit: ${reactionTime} ms. Klicke für eine neue Runde!`;
+        clearTimeout(timeout);
+        box.style.background = "blue";
+      } else if (box.style.background === "red") {
+        message.textContent = "Zu früh! Warte auf GRÜN!";
+      } else if (box.style.background === "blue") {
+        startGame();
+      }
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
