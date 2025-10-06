@@ -14,6 +14,7 @@
       background: #222;
       color: white;
       flex-direction: column;
+      text-align: center;
     }
 
     #box {
@@ -24,31 +25,81 @@
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       transition: background 0.3s;
+      display: none; /* Versteckt, bis der Code korrekt ist */
     }
 
     #message {
       margin-top: 20px;
       font-size: 20px;
     }
+
+    #codeInput {
+      font-size: 18px;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    #checkButton {
+      font-size: 18px;
+      padding: 8px 15px;
+      border-radius: 8px;
+      border: none;
+      background: green;
+      color: white;
+      cursor: pointer;
+    }
+
+    #checkButton:hover {
+      background: darkgreen;
+    }
   </style>
 </head>
 <body>
-  <div id="box"></div>
-  <div id="message">Klicke, wenn das Feld GRÜN wird!</div>
+  <div id="loginArea">
+    <h2>Gib den Code ein, um das Spiel zu starten:</h2>
+    <input id="codeInput" type="password" placeholder="Code eingeben">
+    <button id="checkButton">Start</button>
+    <div id="error" style="color:red; margin-top:10px;"></div>
+  </div>
+
+  <div id="gameArea" style="display:none;">
+    <div id="box"></div>
+    <div id="message">Klicke, wenn das Feld GRÜN wird!</div>
+  </div>
 
   <script>
+    const correctCode = "DG6696347"; // <-- Hier kannst du deinen eigenen Code festlegen
+    const loginArea = document.getElementById("loginArea");
+    const gameArea = document.getElementById("gameArea");
+    const codeInput = document.getElementById("codeInput");
+    const errorMsg = document.getElementById("error");
+    const checkButton = document.getElementById("checkButton");
+
     const box = document.getElementById("box");
     const message = document.getElementById("message");
-
     let startTime, timeout;
 
+    checkButton.addEventListener("click", () => {
+      if (codeInput.value === correctCode) {
+        loginArea.style.display = "none";
+        gameArea.style.display = "flex";
+        startGame();
+      } else {
+        errorMsg.textContent = "❌ Falscher Code! Bitte versuche es erneut.";
+      }
+    });
+
     function startGame() {
+      box.style.display = "block";
       box.style.background = "red";
       message.textContent = "Warte auf GRÜN...";
       timeout = setTimeout(() => {
         box.style.background = "green";
         startTime = Date.now();
-      }, Math.random() * 3000 + 2000); // 2–5 Sekunden
+      }, Math.random() * 3000 + 2000);
     }
 
     box.addEventListener("click", () => {
@@ -63,8 +114,6 @@
         startGame();
       }
     });
-
-    startGame();
   </script>
 </body>
 </html>
